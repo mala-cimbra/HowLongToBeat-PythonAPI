@@ -50,7 +50,7 @@ class SearchInformations:
         # 2. Ensures the request options contain 'method: "POST"' to filter out the GET init call.
         pattern = re.compile(
             # Capture Group 1: The path suffix after /api/ (e.g., "search" or "find/v2")
-            r'fetch\s*\(\s*["\']\/api\/([a-zA-Z0-9_/]+)[^"\']*["\']\s*,\s*{.*?\s*method:\s*["\']POST["\'].*?}',
+            r'fetch\s*\(\s*["\']/api/([a-zA-Z0-9_/]+)[^"\']*["\']\s*,\s*{[^}]*method:\s*["\']POST["\'][^}]*}',
             re.DOTALL | re.IGNORECASE
         )
         
@@ -185,7 +185,7 @@ class HTMLRequests:
         if search_info_data is None or search_info_data.search_url is None:
             search_info_data = HTMLRequests.send_website_request_getcode(True)
         # Make the request
-        if search_info_data.search_url is not None:
+        if search_info_data is not None and search_info_data.search_url is not None:
             HTMLRequests.SEARCH_URL = HTMLRequests.BASE_URL + search_info_data.search_url
         payload = HTMLRequests.get_search_request_data(game_name, search_modifiers, page)
         resp = requests.post(HTMLRequests.SEARCH_URL, headers=headers, data=payload, timeout=60)
@@ -209,7 +209,7 @@ class HTMLRequests:
         if search_info_data is None or search_info_data.search_url is None:
             search_info_data = HTMLRequests.send_website_request_getcode(True)
         # Make the request
-        if search_info_data.search_url is not None:
+        if search_info_data is not None and search_info_data.search_url is not None:
             HTMLRequests.SEARCH_URL = HTMLRequests.BASE_URL + search_info_data.search_url
         payload = HTMLRequests.get_search_request_data(game_name, search_modifiers, page)
         timeout = aiohttp.ClientTimeout(total=60)
